@@ -6,6 +6,7 @@ const multer = require('multer');
 const { GridFsStorage } = require('multer-gridfs-storage');
 const Grid = require('gridfs-stream');
 const crypto = require('crypto');
+const client = new MongoClient(process.env.MONGO_URI);
 
 const app = express();
 
@@ -93,6 +94,14 @@ app.use("/", router);
 
 //For deploy on cyclic
 const PORT = process.env.PORT || 3000
-app.listen(PORT, () => {
-	console.log("listening for requests");
-})
+// app.listen(PORT, () => {
+// 	console.log("listening for requests");
+// })
+
+client.connect(err => {
+	if (err) { console.error(err); return false; }
+	// connection to mongo is successful, listen for requests
+	app.listen(PORT, () => {
+		console.log("listening for requests");
+	})
+});
