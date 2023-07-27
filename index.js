@@ -1,3 +1,4 @@
+require('dotenv').config();
 const express = require('express');
 const mongoose = require('mongoose');
 const cors = require('cors');
@@ -13,9 +14,8 @@ app.use(cors());
 
 const router = express.Router();
 
-const mongoURI = "mongodb+srv://huanwu:ABCD1234@webproject.qhq6u.mongodb.net/?retryWrites=true&w=majority";
 // Create mongo connection
-const conn = mongoose.createConnection(mongoURI, { useUnifiedTopology: true, useNewUrlParser: true, useCreateIndex: true });
+const conn = mongoose.createConnection(process.env.MONGO_URI, { useUnifiedTopology: true, useNewUrlParser: true, useCreateIndex: true });
 // Init gfs
 let gfs;
 conn.once('open', () => {
@@ -25,7 +25,7 @@ conn.once('open', () => {
 });
 // Create storage engine
 const storage = new GridFsStorage({
-	url: mongoURI,
+	url: process.env.MONGO_URI,
 	file: (req, file) => {
 		return new Promise((resolve, reject) => {
 			crypto.randomBytes(16, (err, buf) => {
